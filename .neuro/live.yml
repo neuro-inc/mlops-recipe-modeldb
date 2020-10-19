@@ -1,0 +1,97 @@
+kind: live
+
+defaults:
+  preset: cpu-small
+
+
+images:
+  img:
+    ref: image:${{ flow.project_id }}:v1.0
+    dockerfile: ${{ flow.workspace }}/Dockerfile
+    context: ${{ flow.workspace }}
+
+#args:
+#  storage_modeldb: storage:my-project/deployment/modeldb
+#  mount_modeldb: /project/deployment/modeldb
+
+#tasks:
+jobs:
+  modeldb_backend:
+    name: my-project-modeldb-backend
+    preset: cpu-small
+    life_span: 1h
+    image: vertaaiofficial/modeldb-backend:2.0.8.1
+    env:
+      VERTA_MODELDB_CONFIG: /project/deployment/modeldb/backend/config/config.yaml
+    volumes:
+      - storage:my-project/deployment/modeldb/backend/config:/project/deployment/modeldb/backend/config:ro
+      # - storage:artifacts/my-project/modeldb:/project/deployment/modeldb/artifact-store:rw
+      - storage:artifacts/my-project/modeldb:/artifact-store:rw
+    detach: True
+
+  modeldb_proxy:
+    #needs:
+    #  - modeldb_backend
+    image: vertaaiofficial/modeldb-proxy:2.0.8.1
+    name: my-project-modeldb-proxy
+    preset: cpu-small
+    life_span: 1h
+    env:
+      MDB_ADDRESS: "my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8085"
+      SERVER_HTTP_PORT: "8080"
+    detach: True
+
+  modeldb_graphql:
+    #needs:
+    #  - modeldb_backend
+    image: vertaaiofficial/modeldb-graphql:2.0.8.1
+    name: my-project-modeldb-graphql
+    preset: cpu-small
+    life_span: 1h
+    env:
+      MDB_ADDRESS: "my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8085"
+      SERVER_HTTP_PORT: "4000"
+      QUERY_PATH: "/api/v1/graphql/query"
+    detach: True
+
+  modeldb_frontend:
+    #needs:
+    #  - modeldb_proxy
+    #  - modeldb_graphql
+    image: vertaaiofficial/modeldb-frontend:2.0.8.1
+    name: my-project-modeldb-frontend
+    preset: cpu-small
+    life_span: 1h
+    http_port: 3000
+    env:
+      DEPLOYED: "yes"
+      BACKEND_API_PROTOCOL: "http"
+      BACKEND_API_DOMAIN:  "my-project-modeldb-frontend--artemyushkovskiy.platform-jobs:3000"
+      MDB_ADDRESS:         "http://my-project-modeldb-proxy--artemyushkovskiy.platform-jobs:8080"
+      ARTIFACTORY_ADDRESS: "http://my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8086"
+      GQL_ADDRESS:         "http://my-project-modeldb-graphql--artemyushkovskiy.platform-jobs:4000"
+    detach: True
+
+  modeldb_postgres:
+    image: postgres:latest
+    name: my-project-modeldb-postgres
+    preset: cpu-small
+    life_span: 1h
+    #restart: always
+    env:
+      POSTGRES_PASSWORD: "root"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - storage:my-project/deployment/modeldb/data:/var/lib/postgresql/data/pgdata:rw
+    detach: True
+
+  modeldb_example:
+    image: neuromation/base:latest
+    env:
+      PYTHONPATH: /project
+    volumes:
+      - storage:my-project:/project
+    bash: |
+      cd /project
+      pip install -r requirements.txt
+      pytest -vv /project/tests/
