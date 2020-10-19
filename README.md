@@ -13,7 +13,11 @@ make init
 make modeldb-up
 ```
 
-3. Replace placeholder `my-user` with your actual username on Neu.ro platform in function `get_neuro_user()` in file [src/utils.py](src/utils.py):
+3. Replace placeholder `MYUSER` with your actual username on Neu.ro platform:
+    1) in function `get_neuro_user()` in file [src/utils.py](src/utils.py)
+    2) in [.neuro/live.yml](.neuro/live.yml)
+    3) in [deployment/modeldb/backend/config/config.yaml](deployment/modeldb/backend/config/config.yaml)
+
 ```bash
 neuro config show | grep 'User Name:'
 ```

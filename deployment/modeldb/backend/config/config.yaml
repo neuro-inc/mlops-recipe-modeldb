@@ -1,3 +1,5 @@
+# TODO: replace 'MYUSER' with your Neu.ro username (`neuro config show | grep "User Name:"`)
+
 #This config is used by docker compose.
 #ModelDB Properties
 grpcServer:
@@ -25,7 +27,7 @@ database:
     RdbDatabaseName: postgres
     RdbDriver: "org.postgresql.Driver"
     RdbDialect: "org.hibernate.dialect.PostgreSQLDialect"
-    RdbUrl: "jdbc:postgresql://my-project-modeldb-postgres--artemyushkovskiy.platform-jobs:5432"
+    RdbUrl: "jdbc:postgresql://my-project-modeldb-postgres--MY_USER.platform-jobs:5432"
     RdbUsername: postgres
     RdbPassword: root
 
@@ -39,7 +41,7 @@ test:
       RdbDatabaseName: postgres
       RdbDriver: "org.postgresql.Driver"
       RdbDialect: "org.hibernate.dialect.PostgreSQLDialect"
-      RdbUrl: "jdbc:postgresql://my-project-modeldb-postgres--artemyushkovskiy.platform-jobs:5432"
+      RdbUrl: "jdbc:postgresql://my-project-modeldb-postgres--MY_USER.platform-jobs:5432"
       RdbUsername: postgres
       RdbPassword: root
 

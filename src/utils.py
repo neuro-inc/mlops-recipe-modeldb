@@ -7,7 +7,7 @@ def get_project_name() -> str:
 
 def get_neuro_user() -> str:
     # TODO: replace this value with your Neu.ro username (`neuro config show | grep "User Name:"`)
-    return "my-user"
+    return "MY_USER"
 
 
 def get_neuro_cluster() -> str:

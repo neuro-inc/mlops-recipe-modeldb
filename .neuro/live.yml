@@ -1,3 +1,5 @@
+# TODO: replace 'MYUSER' with your Neu.ro username (`neuro config show | grep "User Name:"`)
+
 kind: live
 
 defaults:
@@ -37,7 +39,7 @@ jobs:
     preset: cpu-small
     life_span: 1h
     env:
-      MDB_ADDRESS: "my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8085"
+      MDB_ADDRESS: "my-project-modeldb-backend--MY_USER.platform-jobs:8085"
       SERVER_HTTP_PORT: "8080"
     detach: True
 
@@ -49,7 +51,7 @@ jobs:
     preset: cpu-small
     life_span: 1h
     env:
-      MDB_ADDRESS: "my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8085"
+      MDB_ADDRESS: "my-project-modeldb-backend--MY_USER.platform-jobs:8085"
       SERVER_HTTP_PORT: "4000"
       QUERY_PATH: "/api/v1/graphql/query"
     detach: True
@@ -66,10 +68,10 @@ jobs:
     env:
       DEPLOYED: "yes"
       BACKEND_API_PROTOCOL: "http"
-      BACKEND_API_DOMAIN:  "my-project-modeldb-frontend--artemyushkovskiy.platform-jobs:3000"
-      MDB_ADDRESS:         "http://my-project-modeldb-proxy--artemyushkovskiy.platform-jobs:8080"
-      ARTIFACTORY_ADDRESS: "http://my-project-modeldb-backend--artemyushkovskiy.platform-jobs:8086"
-      GQL_ADDRESS:         "http://my-project-modeldb-graphql--artemyushkovskiy.platform-jobs:4000"
+      BACKEND_API_DOMAIN:  "my-project-modeldb-frontend--MY_USER.platform-jobs:3000"
+      MDB_ADDRESS:         "http://my-project-modeldb-proxy--MY_USER.platform-jobs:8080"
+      ARTIFACTORY_ADDRESS: "http://my-project-modeldb-backend--MY_USER.platform-jobs:8086"
+      GQL_ADDRESS:         "http://my-project-modeldb-graphql--MY_USER.platform-jobs:4000"
     detach: True
 
   modeldb_postgres:
